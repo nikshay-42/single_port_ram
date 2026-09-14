@@ -1,0 +1,89 @@
+`timescale 1ns / 1ps 
+module single_port_ram(input logic clk,
+                       input logic rst,
+                       input logic [15:0] ar,
+                       input logic [15:0] ac,
+                       input logic req,
+                       input logic rw,
+                       input logic [15:0] Qi,
+                       output logic [15:0] Qa,
+                       output logic valid,
+                       output logic [15:0] memory[15:0][15:0]
+    );
+    parameter R=16,C=16,N=32;      
+    initial begin
+        for(int a=0;a<16;a++)begin
+            for(int b=0;b<16;b++)begin
+                memory[a][b]=0;
+            end
+        end
+    end
+    always_ff @(posedge clk)begin
+        if(rst)begin
+            Qa<=0;
+            valid<=0;
+        end
+        else if(req==1&&rw==1)begin
+            Qa<=memory[ar][ac];
+            valid<=1;
+        end
+        else if(req==1&&rw==0)begin
+            memory[ar][ac]<=Qi;
+            valid<=1;
+        end
+        else begin
+            valid<=0;
+            Qa<=0;
+        end  
+    end
+endmodule
+module single_port_ram_tb();
+    logic clk;
+    logic rst;
+    logic [15:0] ar;
+    logic [15:0] ac;
+    logic req;
+    logic rw;
+    logic [15:0] Qi;
+    logic [15:0] Qa;
+    logic valid;
+    logic [15:0] memory[15:0][15:0];
+    single_port_ram uut (
+        .clk(clk),
+        .rst(rst),
+        .ar(ar),
+        .ac(ac),
+        .req(req),
+        .rw(rw),
+        .Qi(Qi),
+        .Qa(Qa),
+        .valid(valid),
+        .memory(memory)
+    );
+    initial clk = 0;
+    always #5 clk = ~clk; 
+    initial begin
+        rst = 1;
+        ar = 0;
+        ac = 0;
+        req = 0;
+        rw = 0;
+        Qi = 0;
+        #10 rst = 0;
+        ar = 5;   
+        ac = 3;   
+        Qi = 1;   
+        req = 1;  
+        rw = 0;   
+        #10;
+        req = 0;
+        #10;
+        req = 1;   
+        rw = 1;    
+        #10;
+        req = 0;
+        #10;
+        $stop;
+    end
+
+endmodule
