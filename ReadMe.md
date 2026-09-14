@@ -36,3 +36,22 @@ When the write enable signal is active, the input data is stored in the memory l
 Clock + Write Enable + Address + Data
                 ↓
              Memory
+
+
+# Single-Port RAM
+
+A simple **Single-Port RAM** design implemented using **Verilog HDL**.
+
+
+
+## Files
+- `single_port_ram.v` - RAM design
+- `single_port_ram_tb.v` - Testbench
+- `README.md` - Documentation
+
+## Simulation
+The design was simulated and verified using waveform analysis to confirm correct read and write operations.
+
+## Author
+**Nikshay-42**
+
